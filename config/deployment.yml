@@ -41,10 +41,10 @@ spec:
         - containerPort: 3400
         resources:
           requests:
-            cpu: 200m
+            cpu: 100m
             memory: 256Mi
           limits:
-            cpu: 400m
+            cpu: 200m
             memory: 512Mi
         volumeMounts:
         - name: mongo-ca-certificate
