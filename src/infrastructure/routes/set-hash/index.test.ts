@@ -5,7 +5,7 @@ import { User } from '../../database/models/user'
 import { Request, Response } from 'express'
 
 const baseRoute = '/api/v1/account/login'
-const { loginHandler } = loginModules
+const { setHashHandler: loginHandler } = loginModules
 
 describe('Login route', () => {
   let request: supertest.SuperTest<supertest.Test>
@@ -34,7 +34,7 @@ describe('Login route', () => {
       })
       .expect(200)
       .then(() => {
-        expect(loginModules.loginHandler).toHaveBeenCalled()
+        expect(loginModules.setHashHandler).toHaveBeenCalled()
         done()
       })
   })

@@ -1,22 +1,16 @@
-import mongoose from 'mongoose'
+import { createClient, RedisClientType } from 'redis'
 import fs from 'fs'
 
-export const mongoConnect = async (): Promise<string> => {
-  const mongooseOptions: mongoose.ConnectOptions = {}
-  const mongoStrinfFilePath = process.env.MONGO_STRING_FILE_PATH
-  const mongoString = fs
-    .readFileSync(`${mongoStrinfFilePath}mongostring.txt`)
+export const redisConnect = async (): Promise<RedisClientType> => {
+  const redisStrinfFilePath = process.env.VAULT_SECRET_FILE_PATH
+
+  const redisString = fs
+    .readFileSync(`${redisStrinfFilePath}redisstring.txt`)
     .toString()
-  return new Promise((resolve, reject) => {
-    mongoose.connect(mongoString, mongooseOptions).then(
-      () => {
-        console.log('Connected to Mongo')
-        return resolve('')
-      },
-      (err) => {
-        console.error(`Error! --> ${err}`)
-        return reject(err)
-      }
-    )
+  return createClient({
+    url: redisString,
+    socket: {
+      connectTimeout: 30000,
+    },
   })
 }
