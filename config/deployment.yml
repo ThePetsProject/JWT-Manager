@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: account-login-manager
+  name: jwt-manager
   labels:
-    app: account-login-manager
+    app: jwt-manager
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: account-login-manager
+      app: jwt-manager
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -17,29 +17,28 @@ spec:
   template:
     metadata:
       labels:
-        app: account-login-manager
+        app: jwt-manager
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
-        vault.hashicorp.com/role: 'account-login-manager'
-        vault.hashicorp.com/agent-inject-secret-mongostring.txt: 'kv/data/account-login-manager/production'
-        vault.hashicorp.com/agent-inject-template-mongostring.txt: |
-          {{- with secret "kv/data/account-login-manager/production" -}}
-          {{ .Data.data.mongoString }}
+        vault.hashicorp.com/role: 'jwt-manager'
+        vault.hashicorp.com/agent-inject-secret-redisstring.txt: 'kv/data/jwt-manager/production'
+        vault.hashicorp.com/agent-inject-template-redisstring.txt: |
+          {{- with secret "kv/data/jwt-manager/production" -}}
+          {{ .Data.data.redisstring }}
           {{- end -}}
     spec:
-      serviceAccountName: account-login-manager-service-account
+      serviceAccountName: jwt-manager-service-account
       containers:
-      - name: account-login-manager
+      - name: jwt-manager
         image: <IMAGE>
         imagePullPolicy: "Always"
         env:
           - name: PORT
-            value: "3100"
-          - name: MONGO_STRING_FILE_PATH
+            value: "3400"
+          - name: VAULT_SECRET_FILE_PATH
             value: /vault/secrets/
         ports:
-        - containerPort: 3100
-          name: sbp-port
+        - containerPort: 3400
         resources:
           requests:
             cpu: 200m
@@ -59,13 +58,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: account-login-manager-service
+  name: jwt-manager-service
   labels:
-    app: account-login-manager-service
+    app: jwt-manager-service
 spec:
   ports:
-  - port: 3100
+  - port: 3400
     name: http
-    targetPort: 3100
+    targetPort: 3400
   selector:
-    app: account-login-manager
+    app: jwt-manager
