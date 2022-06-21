@@ -19,7 +19,7 @@ kind: ServiceAccount
 metadata:
   name: jwt-manager-service-account
   namespace: default
----    
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -64,7 +64,7 @@ spec:
           - name: VAULT_SECRET_FILE_PATH
             value: /vault/secrets/
           - name: REDIS_MANAGER_URL
-            value: redis-manager-service
+            value: http://redis-manager-service
           - name: REDIS_MANAGER_SET_HASH_ENDPOINT
             value: api/v1/redis-manager/set-hash
         ports:
