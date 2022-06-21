@@ -1,3 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jwt-manager-service
+  labels:
+    app: jwt-manager-service
+spec:
+  ports:
+  - port: 80
+    name: http
+    targetPort: 3400
+  selector:
+    app: jwt-manager
+---
+apiVersion: v1
+imagePullSecrets:
+- name: tpp-registry
+kind: ServiceAccount
+metadata:
+  name: jwt-manager-service-account
+  namespace: default
+---    
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -54,17 +76,3 @@ spec:
           limits:
             cpu: 200m
             memory: 512Mi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: jwt-manager-service
-  labels:
-    app: jwt-manager-service
-spec:
-  ports:
-  - port: 3400
-    name: http
-    targetPort: 3400
-  selector:
-    app: jwt-manager
