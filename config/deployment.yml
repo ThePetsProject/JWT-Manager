@@ -24,7 +24,7 @@ spec:
         vault.hashicorp.com/agent-inject-secret-redisstring.txt: 'kv/data/jwt-manager/production'
         vault.hashicorp.com/agent-inject-template-redisstring.txt: |
           {{- with secret "kv/data/jwt-manager/production" -}}
-          {{ .Data.data.redisstring }}
+          {{ .Data.data.redisString }}
           {{- end -}}
     spec:
       serviceAccountName: jwt-manager-service-account
@@ -46,14 +46,6 @@ spec:
           limits:
             cpu: 200m
             memory: 512Mi
-        volumeMounts:
-        - name: mongo-ca-certificate
-          mountPath: "/etc/certs"
-          readOnly: true
-      volumes:
-      - name: mongo-ca-certificate
-        secret:
-          secretName: mongo-ca-certificate.cer
 ---
 apiVersion: v1
 kind: Service
