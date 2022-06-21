@@ -21,10 +21,14 @@ spec:
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/role: 'jwt-manager'
-        vault.hashicorp.com/agent-inject-secret-redisstring.txt: 'kv/data/jwt-manager/production'
-        vault.hashicorp.com/agent-inject-template-redisstring.txt: |
+        vault.hashicorp.com/agent-inject-secret-pk.pem: 'kv/data/jwt-manager/production'
+        vault.hashicorp.com/agent-inject-template-pk.pem: |
           {{- with secret "kv/data/jwt-manager/production" -}}
-          {{ .Data.data.redisString }}
+          {{ .Data.data.privKey }}
+          {{- end -}}
+        vault.hashicorp.com/agent-inject-template-pubk.pem: |
+          {{- with secret "kv/data/jwt-manager/production" -}}
+          {{ .Data.data.pubKey }}
           {{- end -}}
     spec:
       serviceAccountName: jwt-manager-service-account
@@ -37,6 +41,10 @@ spec:
             value: "3400"
           - name: VAULT_SECRET_FILE_PATH
             value: /vault/secrets/
+          - name: REDIS_MANAGER_URL
+            value: redis-manager-service
+          - name: REDIS_MANAGER_SET_HASH_ENDPOINT
+            value: api/v1/redis-manager/set-hash
         ports:
         - containerPort: 3400
         resources:

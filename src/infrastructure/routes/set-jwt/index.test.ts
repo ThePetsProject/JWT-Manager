@@ -4,7 +4,7 @@ import * as loginModules from '.'
 import { Request, Response } from 'express'
 
 const baseRoute = '/api/v1/jwt/set-hash'
-const { setHashHandler: loginHandler } = loginModules
+const { setJWTHandler: loginHandler } = loginModules
 
 describe('Set hash route', () => {
   let request: supertest.SuperTest<supertest.Test>
