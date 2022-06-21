@@ -25,6 +25,7 @@ export const setJWTHandler = async (
   })
 
   const redisUrl = `${process.env.REDIS_MANAGER_URL}/${process.env.REDIS_MANAGER_SET_HASH_ENDPOINT}`
+  console.log(redisUrl)
 
   const axiosConfig = {
     method: 'post',
