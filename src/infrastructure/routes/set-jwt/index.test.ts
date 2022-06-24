@@ -5,7 +5,6 @@ import { Request, Response } from 'express'
 import axios, { AxiosError } from 'axios'
 import fs from 'fs'
 import jwt from 'jsonwebtoken'
-import { generateKeyPairSync } from 'crypto'
 
 jest.mock('axios')
 const mockedAxios = axios as jest.Mocked<typeof axios>
