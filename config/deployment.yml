@@ -48,6 +48,7 @@ spec:
           {{- with secret "kv/data/jwt-manager/production" -}}
           {{ .Data.data.privKey }}
           {{- end -}}
+        vault.hashicorp.com/agent-inject-secret-pubk.pem: 'kv/data/jwt-manager/production'
         vault.hashicorp.com/agent-inject-template-pubk.pem: |
           {{- with secret "kv/data/jwt-manager/production" -}}
           {{ .Data.data.pubKey }}
