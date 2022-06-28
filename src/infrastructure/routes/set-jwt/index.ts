@@ -17,7 +17,7 @@ export const setJWTHandler = async (
   const privateKey = fs.readFileSync(`${vaultSecretsPath}pk.pem`)
   const accToken = jwt.sign({ email }, privateKey, {
     algorithm: 'RS256',
-    expiresIn: 120,
+    expiresIn: '2 days',
   })
   const refToken = jwt.sign({ email }, privateKey, {
     algorithm: 'RS256',
