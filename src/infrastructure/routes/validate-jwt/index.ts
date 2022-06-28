@@ -14,6 +14,9 @@ export const validateJWTHandler = async (
 
   const publicKey = fs.readFileSync(`${vaultSecretsPath}pubk.pem`)
 
+  console.log('publicKey', publicKey)
+  console.log('token', token)
+
   try {
     const decoded = await jwt.verify(token, publicKey, {
       algorithms: ['RS256'],
