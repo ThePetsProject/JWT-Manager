@@ -2,13 +2,11 @@ import { setJWTRoute } from './set-jwt'
 import { healthRoute } from './health'
 import { Router } from 'express'
 import { validateJWTRoute } from './validate-jwt'
-
-/**
- * Create a Router type handler for each path, and set it in router.use
- */
+import { refreshJWTRoute } from './refresh-jwt'
 
 export const routesArray = (router: Router) => [
   validateJWTRoute(router),
+  refreshJWTRoute(router),
   setJWTRoute(router),
   healthRoute(router),
 ]

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node build/index.js",
     "build": "rm -rf build && ttsc --project tsconfig.build.json && tscpaths -p tsconfig.json -s ./src -o ./build",
-    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register -r dotenv/config src/index.ts",
     "test": "jest --no-cache --runInBand",
     "test:watch": "jest --no-cache --runInBand --watch --forceExit --detectOpenHandles",
     "coverage": "npm test -- --coverage --no-cache --forceExit --detectOpenHandles",
