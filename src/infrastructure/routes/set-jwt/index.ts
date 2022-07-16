@@ -1,8 +1,5 @@
 import { Router } from 'express'
 import { Request, Response } from 'express'
-import jwt from 'jsonwebtoken'
-import { tokenSignConfig, refTokenSignConfig } from '@src/utils/jwt'
-import { privateKey } from '@src/utils/keys'
 import { signJWT } from '@src/utils/jwt'
 
 export type SetJWTRouteFnType = (router: Router) => Router

@@ -1,6 +1,14 @@
 import { SignedJWTS, signJWT, verifyJWT } from './jwt'
 import jwt from 'jsonwebtoken'
 import fs from 'fs'
+import * as keysModules from './keys'
+
+jest.mock('./keys', () => {
+  return {
+    privateKey: Buffer.from('fakePrivKey'),
+    publicKey: Buffer.from('fakePubKey'),
+  }
+})
 
 const email = 'fake@email.com'
 process.env.TOKEN_EXPIRE = '2 days'
@@ -10,10 +18,6 @@ describe('JWT utils', () => {
   describe('Sign JWT', () => {
     it('Should return accToken and refToken', () => {
       jest.spyOn(jwt, 'sign').mockImplementation(() => 'fakeJwt')
-
-      jest
-        .spyOn(fs, 'readFileSync')
-        .mockImplementation(() => Buffer.from('fakePrivKey'))
 
       const expectedResponse = {
         accToken: 'fakeJwt',
