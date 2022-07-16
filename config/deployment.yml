@@ -64,6 +64,10 @@ spec:
             value: "3400"
           - name: VAULT_SECRET_FILE_PATH
             value: /vault/secrets/
+          - name: TOKEN_EXPIRE
+            value: "2 days"
+          - name: REF_TOKEN_EXPIRE
+            value: "7 days"
         ports:
         - containerPort: 3400
         resources:

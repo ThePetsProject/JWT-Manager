@@ -7,7 +7,7 @@ import { Response } from 'express'
 const baseRoute = '/api/v1/jwt'
 const { formatTime, healthHandler } = healthMethods
 
-describe('Health route', () => {
+describe('Health', () => {
   let request: supertest.SuperTest<supertest.Test>
 
   beforeAll(() => {

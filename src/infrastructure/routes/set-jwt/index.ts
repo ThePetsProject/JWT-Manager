@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { tokenSignConfig, refTokenSignConfig } from '@src/utils/jwt'
 import { privateKey } from '@src/utils/keys'
-import { signJWT } from '@src/utils/redis'
+import { signJWT } from '@src/utils/jwt'
 
 export type SetJWTRouteFnType = (router: Router) => Router
 
@@ -13,7 +13,20 @@ export const setJWTHandler = async (
 ): Promise<Response> => {
   const { email } = req.body
 
-  return signJWT(email, res)
+  if (!email?.length) return res.sendStatus(401)
+
+  try {
+    const { accToken, refToken } = signJWT(email)
+
+    if (!(accToken.length && refToken.length)) return res.sendStatus(401)
+
+    return res.status(200).send({
+      accToken,
+      refToken,
+    })
+  } catch (error) {
+    return res.sendStatus(500)
+  }
 }
 
 export const setJWTRoute: SetJWTRouteFnType = (router: Router): Router => {

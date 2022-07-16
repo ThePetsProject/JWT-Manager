@@ -1,71 +1,37 @@
-import supertest from 'supertest'
-import app from '../../../app'
-import * as setJWTModules from '.'
+import * as refreshJWTModules from '.'
 import { Request, Response } from 'express'
-import axios, { AxiosError } from 'axios'
-import fs from 'fs'
-import jwt from 'jsonwebtoken'
+import * as JWTUtilsModules from '@src/utils/jwt'
+import { SignedJWTS } from '@src/utils/jwt'
 
-jest.mock('axios')
-const mockedAxios = axios as jest.Mocked<typeof axios>
-
-const baseRoute = '/api/v1/jwt'
-const { setJWTHandler } = setJWTModules
+const { setJWTHandler } = refreshJWTModules
 
 jest.spyOn(global.console, 'error').mockImplementation(() => {})
 jest.spyOn(global.console, 'info').mockImplementation(() => {})
 
-const responseTokens = {
-  accToken: 'fakeJwt',
-  refToken: 'fakeJwt',
-}
-const mockRedisResponse = () => mockedAxios.request.mockResolvedValueOnce({})
+const fakeJWTs = {
+  accToken: 'fakeAcctoken',
+  refToken: 'fakeRefToken',
+} as SignedJWTS
 
-describe('Set JWT route', () => {
-  const env = process.env
+const signJWTError = Error('Error signing JWT')
 
-  jest
-    .spyOn(fs, 'readFileSync')
-    .mockImplementation(() => Buffer.from('fakePrivKey'))
+const resMock = {
+  send: jest.fn().mockReturnThis(),
+  status: jest.fn().mockReturnThis(),
+  sendStatus: jest.fn().mockReturnThis(),
+} as any as Response
 
-  let request: supertest.SuperTest<supertest.Test>
+describe('Set JWT', () => {
+  beforeAll(() => {})
 
-  beforeAll(() => {
-    request = supertest(app)
-  })
-
-  beforeEach(() => {
-    jest.spyOn(jwt, 'sign').mockImplementation(() => 'fakeJwt')
-    process.env = {
-      ...env,
-      REDIS_MANAGER_URL: 'REDIS_MANAGER_URL',
-      REDIS_MANAGER_SET_HASH_ENDPOINT: 'REDIS_MANAGER_SET_HASH_ENDPOINT',
-    }
-  })
+  beforeEach(() => {})
 
   afterEach(() => {
-    jest.resetAllMocks()
-    process.env = env
+    jest.restoreAllMocks()
   })
 
-  it('Should call method when root path', (done) => {
-    jest.spyOn(setJWTModules, 'setJWTHandler')
-    mockRedisResponse()
-
-    request
-      .post(`${baseRoute}/`)
-      .send({
-        email: 'fake@email.com',
-      })
-      .expect(200)
-      .then(() => {
-        expect(setJWTModules.setJWTHandler).toHaveBeenCalled()
-        done()
-      })
-  })
-
-  it('Should respond 200 when creates JWT', async () => {
-    mockRedisResponse()
+  it('Should respond 200 when resfreshes JWT', async () => {
+    jest.spyOn(JWTUtilsModules, 'signJWT').mockReturnValueOnce(fakeJWTs)
 
     const req = {
       body: {
@@ -73,19 +39,42 @@ describe('Set JWT route', () => {
       },
     } as Request
 
-    const res = {
-      send: jest.fn().mockReturnThis(),
-      status: jest.fn().mockReturnThis(),
-    } as any as Response
-
-    const loginResponse = await setJWTHandler(req, res)
+    const loginResponse = await setJWTHandler(req, resMock)
     expect(loginResponse.status).toBeCalledWith(200)
-    expect(loginResponse.send).toBeCalledWith(responseTokens)
+    expect(loginResponse.send).toBeCalledWith(fakeJWTs)
   })
 
-  it('Should respond 500 if axios returns error', async () => {
-    const errorMsg = 'Error message'
-    mockedAxios.request.mockRejectedValueOnce(new Error(errorMsg) as AxiosError)
+  it('Should respond 401 when email sent empty', async () => {
+    jest.spyOn(JWTUtilsModules, 'signJWT').mockReturnValueOnce(fakeJWTs)
+
+    const req = {
+      body: {
+        email: '',
+      },
+    } as Request
+
+    const loginResponse = await setJWTHandler(req, resMock)
+    expect(loginResponse.sendStatus).toBeCalledWith(401)
+  })
+
+  it('Should respond 401 when email not sent', async () => {
+    jest
+      .spyOn(JWTUtilsModules, 'verifyJWT')
+      .mockResolvedValueOnce('fake@email.com')
+    jest.spyOn(JWTUtilsModules, 'signJWT').mockReturnValueOnce(fakeJWTs)
+
+    const req = {
+      body: {},
+    } as Request
+
+    const loginResponse = await setJWTHandler(req, resMock)
+    expect(loginResponse.sendStatus).toBeCalledWith(401)
+  })
+
+  it('Should respond 500 when signJWT throws an error', async () => {
+    jest.spyOn(JWTUtilsModules, 'signJWT').mockImplementationOnce(() => {
+      throw signJWTError
+    })
 
     const req = {
       body: {
@@ -93,15 +82,39 @@ describe('Set JWT route', () => {
       },
     } as Request
 
-    const res = {
-      send: jest.fn().mockReturnThis(),
-      status: jest.fn().mockReturnThis(),
-    } as any as Response
+    const loginResponse = await setJWTHandler(req, resMock)
+    expect(loginResponse.sendStatus).toBeCalledWith(500)
+  })
 
-    const loginResponse = await setJWTHandler(req, res)
-    expect(loginResponse.status).toBeCalledWith(500)
-    expect(loginResponse.send).toBeCalledWith({
-      message: errorMsg,
+  it('Should respond 401 when accToken is empty', async () => {
+    jest.spyOn(JWTUtilsModules, 'signJWT').mockReturnValueOnce({
+      accToken: '',
+      refToken: 'fakeRefToken',
     })
+
+    const req = {
+      body: {
+        email: 'fake@email.com',
+      },
+    } as Request
+
+    const loginResponse = await setJWTHandler(req, resMock)
+    expect(loginResponse.sendStatus).toBeCalledWith(401)
+  })
+
+  it('Should respond 401 when refToken is empty', async () => {
+    jest.spyOn(JWTUtilsModules, 'signJWT').mockReturnValueOnce({
+      accToken: 'fakeAccToken',
+      refToken: '',
+    })
+
+    const req = {
+      body: {
+        email: 'fake@email.com',
+      },
+    } as Request
+
+    const loginResponse = await setJWTHandler(req, resMock)
+    expect(loginResponse.sendStatus).toBeCalledWith(401)
   })
 })
