@@ -4,6 +4,13 @@ import * as healthMethods from '.'
 import projectProperties from '@utils/project_properties'
 import { Response } from 'express'
 
+jest.mock('@utils/jwt', () => {
+  return {
+    validateJWT: jest.fn(),
+    signJWT: jest.fn(),
+  }
+})
+
 const baseRoute = '/api/v1/jwt'
 const { formatTime, healthHandler } = healthMethods
 

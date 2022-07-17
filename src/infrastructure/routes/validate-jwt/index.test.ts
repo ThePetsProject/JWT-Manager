@@ -6,6 +6,13 @@ import axios, { AxiosError } from 'axios'
 import fs from 'fs'
 import jwt from 'jsonwebtoken'
 
+jest.mock('@utils/keys', () => {
+  return {
+    privateKey: Buffer.from('fakePrivKey'),
+    publicKey: Buffer.from('fakePubKey'),
+  }
+})
+
 jest.mock('axios')
 
 const mockDecoded = { decoded: 'key' }

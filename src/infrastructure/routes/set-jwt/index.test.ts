@@ -2,6 +2,14 @@ import * as refreshJWTModules from '.'
 import { Request, Response } from 'express'
 import * as JWTUtilsModules from '@src/utils/jwt'
 import { SignedJWTS } from '@src/utils/jwt'
+import { buffer } from 'stream/consumers'
+
+jest.mock('@utils/keys', () => {
+  return {
+    privateKey: Buffer.from('fakePrivKey'),
+    publicKey: Buffer.from('fakePubKey'),
+  }
+})
 
 const { setJWTHandler } = refreshJWTModules
 

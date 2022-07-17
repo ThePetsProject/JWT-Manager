@@ -3,6 +3,13 @@ import { Request, Response } from 'express'
 import * as JWTUtilsModules from '@src/utils/jwt'
 import { SignedJWTS } from '@src/utils/jwt'
 
+jest.mock('@utils/keys', () => {
+  return {
+    privateKey: Buffer.from('fakePrivKey'),
+    publicKey: Buffer.from('fakePubKey'),
+  }
+})
+
 const { refreshJWTHandler } = refreshJWTModules
 
 jest.spyOn(global.console, 'error').mockImplementation(() => {})
