@@ -10,7 +10,7 @@ export const validateJWTHandler = async (
   res: Response
 ): Promise<Response> => {
   const { token } = req.body
-  const vaultSecretsPath = process.env.VAULT_SECRET_FILE_PATH
+  const vaultSecretsPath = process.env.VAULT_SECRETS_FILE_PATH
 
   const publicKey = fs.readFileSync(`${vaultSecretsPath}pubk.pem`)
 
