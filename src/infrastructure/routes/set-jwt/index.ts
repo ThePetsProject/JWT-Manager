@@ -26,6 +26,38 @@ export const setJWTHandler = async (
   }
 }
 
+/**
+ * @swagger
+ * /api/v1/jwt:
+ *  post:
+ *    summary: Set JWT
+ *    description: Set JWT tokens
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: mail@email.com
+ *                description: Email to be used in JWT
+ *    responses:
+ *      200:
+ *        description: JWT tokens are valid
+ *        content:
+ *          application/json:
+ *            example:
+ *              accToken: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNjI5MjU0NjQ2LCJleHAiOjE2Mjk4NTk0ND
+ *              refToken: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNjI5MjU0NjQ2LCJleHAiOjE2Mjk4NTk0ND
+ *      401:
+ *        description: Invalid JWT tokens
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: Invalid token
+ */
 export const setJWTRoute: SetJWTRouteFnType = (router: Router): Router => {
   return router.post('/', (req, res) => setJWTHandler(req, res))
 }

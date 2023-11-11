@@ -31,6 +31,38 @@ export const refreshJWTHandler = async (
   })
 }
 
+/**
+ * @swagger
+ * /api/v1/jwt/refresh:
+ *   post:
+ *     summary: Refresh JWT
+ *     description: Refresh JWT tokens
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNjI5MjU0NjQ2LCJleHAiOjE2Mjk4NTk0ND
+ *     responses:
+ *       200:
+ *         description: JWT tokens are valid
+ *         content:
+ *           application/json:
+ *             example:
+ *               accToken: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNjI5MjU0NjQ2LCJleHAiOjE2Mjk4NTk0ND
+ *               refToken: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNjI5MjU0NjQ2LCJleHAiOjE2Mjk4NTk0ND
+ *       401:
+ *         description: Invalid JWT tokens
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Invalid token
+ */
+
 export const refreshJWTRoute: SetJWTRouteFnType = (router: Router): Router => {
   return router.post('/refresh', (req, res) => refreshJWTHandler(req, res))
 }

@@ -25,5 +25,23 @@ export const healthHandler = (res: Response): Response => {
   return res.status(200).send(healthMessage)
 }
 
+/**
+ * @swagger
+ * /api/v1/jwt/health:
+ *  get:
+ *   summary: Health check
+ *   description: Check if the service is up and running
+ *   responses:
+ *    200:
+ *     description: Service is up and running
+ *     content:
+ *      application/json:
+ *       example:
+ *        status: UP
+ *        up_time: 00:00:00
+ *        info:
+ *         name: JWT Manager
+ *         version: 1.0.0
+ */
 export const healthRoute: HealthRouteFnType = (router: Router): Router =>
   router.get('/health', (req, res) => healthHandler(res))
