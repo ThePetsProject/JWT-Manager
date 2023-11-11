@@ -72,7 +72,7 @@
     "typescript": "^4.6.4"
   },
   "bugs": {
-    "url": "https://github.com/ThePetsProject/Account-Login-Manager/issues"
+    "url": "https://github.com/ThePetsProject/JWT-Manager/issues"
   },
-  "homepage": "https://github.com/ThePetsProject/Account-Login-Manager#readme"
+  "homepage": "https://github.com/ThePetsProject/JWT-Manager#readme"
 }
