@@ -1,5 +1,5 @@
 ARG IMG_ENVIRONMENT
-FROM node:16.15.0-alpine as base
+FROM node:18-alpine as base
 
 FROM base as prebuild
 WORKDIR /app
