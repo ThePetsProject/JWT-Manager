@@ -44,6 +44,7 @@ export const validateJWTRoute: ValidateJWTRouteFnType = (
    *               token:
    *                 type: string
    *                 description: JWT token to be validated
+   *                 example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haWxAZW1haWwuY29tIiwiaWF0IjoxNjk5NzM5MjM1LCJleHAiOjI1NjM2NTI4MzV9.xQkR95Dun9-95Y0phTyqaLwYSYRPDYcmAvI1K3bUkY2WlFGkohJiKuEna0xEdgtwUzxCohFIbDYQIbaR_WM4tlBvGTFNlwkp10mKgnRGq8hRDoBIPirSjugso24Y67P7k8K2xW9wndziHE1hzREhUmPnRfH5VzlU7T5i6eekZZ9Rxdl_5BGlNnKNvdVyuDGb2KKrRZR-keiHprMaJNap-V-tR5yRyhDfjkad-78p-fGPqFfEhd4nERUDNgt2O5NfZIw-wwj_ya424Wg7QKmD4aXD-QAtbOzXw0Q9EMIgougW6SqyhqSZYoJATIW78tHsZR9AoaBD2cIYrzAA4fT8xQ
    *     responses:
    *       200:
    *         description: JWT token is valid
