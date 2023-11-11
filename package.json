@@ -6,6 +6,7 @@
   "namespace": "tpp",
   "scripts": {
     "start": "node build/index.js",
+    "start:local": "node -r dotenv/config  build/index.js",
     "build": "rm -rf build && ttsc --project tsconfig.build.json && tscpaths -p tsconfig.json -s ./src -o ./build",
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register -r dotenv/config src/index.ts",
     "test": "jest --no-cache --runInBand",
