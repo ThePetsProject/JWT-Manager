@@ -62,7 +62,7 @@ spec:
         env:
           - name: PORT
             value: "3400"
-          - name: VAULT_SECRET_FILE_PATH
+          - name: VAULT_SECRETS_FILE_PATH
             value: /vault/secrets/
           - name: TOKEN_EXPIRE
             value: "2 days"
