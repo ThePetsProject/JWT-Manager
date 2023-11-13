@@ -7,6 +7,7 @@ WORKDIR /app
 COPY package*.json /app/
 COPY tsconfig*.json /app/
 COPY newrelic.js /app/
+COPY vault_local /app/vault_local
 
 RUN npm ci --quiet
 
@@ -34,6 +35,8 @@ RUN curl -Ls https://download.newrelic.com/install/newrelic-cli/scripts/install.
 
 # LOCAL IMAGE - IMG_ENVIRONMENT=local
 FROM pre-final as img-local
+RUN ls
+COPY --from=prebuild /app/vault_local /app/vault_local
 
 # FINAL BUILD
 ARG IMG_ENVIRONMENT
