@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Request, Response } from 'express'
 import { signJWT } from '@src/utils/jwt'
+import { type } from 'os'
 
 export type SetJWTRouteFnType = (router: Router) => Router
 
@@ -10,18 +11,35 @@ export const setJWTHandler = async (
 ): Promise<Response> => {
   const { email } = req.body
 
-  if (!email?.length) return res.sendStatus(401)
+  const logPrefix = `[JWT-MANAGER][${email}]`
+
+  if (!email?.length) {
+    console.error(`${logPrefix}[SCHEMA_ERROR][ERROR_MESSAGE] Email is required`)
+    return res.sendStatus(401)
+  }
 
   try {
+    console.info(`${logPrefix} Setting JWT`)
     const { accToken, refToken } = signJWT(email)
 
-    if (!(accToken.length && refToken.length)) return res.sendStatus(401)
+    if (!(accToken.length && refToken.length)) {
+      console.error(`${logPrefix}[JWT_ERROR][ERROR_MESSAGE] JWT not set`)
+      return res.sendStatus(401)
+    }
 
+    console.info(`${logPrefix} JWT set`)
     return res.status(200).send({
       accToken,
       refToken,
     })
   } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : typeof error === 'string'
+        ? error
+        : 'Unknown error'
+    console.error(`${logPrefix}[JWT_ERROR][ERROR_MESSAGE] ${errorMessage}`)
     return res.sendStatus(500)
   }
 }
